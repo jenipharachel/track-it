@@ -8,7 +8,7 @@ const LandingPage = props => {
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <Header />
       <BalanceCard />
-      <TrackHistory />
+      <TrackHistory {...props} />
     </View>
   );
 };

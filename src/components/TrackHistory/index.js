@@ -16,7 +16,7 @@ const TrackHistory = props => {
         <TransactionCard label={'Salary'} value={'$567'} />
       </View>
       <View style={{flex: 0.2, justifyContent: 'center', alignItems: 'center'}}>
-        <Button />
+        <Button {...props} />
       </View>
     </View>
   );

@@ -1,12 +1,14 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 
-const Button = props => {
+const addBtn = props => {
   return (
-    <View style={styles.button}>
+    <TouchableOpacity
+      style={styles.button}
+      onPress={() => props.navigation.navigate('Modals')}>
       <Icon name="plus" size={20} color="#FFFFFF" />
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -21,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Button;
+export default addBtn;

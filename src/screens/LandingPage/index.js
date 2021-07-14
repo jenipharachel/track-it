@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import TrackHistory from '../../components/TrackHistory';
+import {TrackHistory} from '../../components';
 import {Header, BalanceCard} from '../../theme';
 
 const LandingPage = props => {

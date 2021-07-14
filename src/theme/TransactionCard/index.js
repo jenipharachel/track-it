@@ -1,9 +1,9 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 const TransactionCard = props => {
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => props.ViewData()}>
       <View style={styles.alignment}>
         <Text style={{fontSize: 14}}>{props.label}</Text>
         <Text
@@ -14,7 +14,7 @@ const TransactionCard = props => {
           {props.value}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

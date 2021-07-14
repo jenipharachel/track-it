@@ -4,6 +4,9 @@ import {Button} from '..';
 import {TransactionCard} from '../../theme';
 
 const TrackHistory = props => {
+  const ViewData = () => {
+    props.navigation.navigate('Modals');
+  };
   return (
     <View style={styles.container}>
       <View style={{flex: 0.8}}>
@@ -12,8 +15,9 @@ const TrackHistory = props => {
           label={'Car tyre change'}
           value={'$567'}
           transType={'expense'}
+          ViewData={ViewData}
         />
-        <TransactionCard label={'Salary'} value={'$567'} />
+        <TransactionCard label={'Salary'} value={'$567'} ViewData={ViewData} />
       </View>
       <View style={{flex: 0.2, justifyContent: 'center', alignItems: 'center'}}>
         <Button {...props} />

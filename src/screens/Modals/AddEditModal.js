@@ -5,10 +5,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
-  Button,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-// import {TextBox, SaveButton} from '../../components';
+import {TextBox, SaveButton, SwitchToggle} from '../../components';
 import colors from '../../theme/colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
@@ -21,6 +20,7 @@ const AddEditModal = props => {
   const dateTime = new Date();
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
+  const [transactionType, setTransactionType] = useState('Income');
 
   const TextBox = (func, value, placeholder) => {
     return (
@@ -76,7 +76,10 @@ const AddEditModal = props => {
           <Icon name="close" size={20} color={colors.black} />
         </TouchableOpacity>
       </View>
-      {/* <TextBox func={onChangeText} value={text} /> */}
+      <SwitchToggle
+        transType={transactionType}
+        setTransType={setTransactionType}
+      />
       {TextBox(onChangeAmt, amount, 'Amount')}
       {TextBox(onChangeDesc, desc, 'Description')}
       {DateBox(date, 'Date')}

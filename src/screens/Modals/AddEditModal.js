@@ -15,8 +15,7 @@ import moment from 'moment';
 const AddEditModal = props => {
   const [amount, onChangeAmt] = React.useState('');
   const [desc, onChangeDesc] = React.useState('');
-  let currentDate = moment(new Date()).format('LL');
-  const [date, setDate] = useState(currentDate);
+  const [date, setDate] = useState('');
   const dateTime = new Date();
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
@@ -49,8 +48,9 @@ const AddEditModal = props => {
   };
 
   const onChange = (event, selectedDateTime) => {
-    let selectedDate = new Date(selectedDateTime);
-    let formattedDate = moment(new Date(selectedDate)).format('LL') || date;
+    let selectedDate =
+      selectedDateTime && moment(new Date(selectedDateTime)).format('LL');
+    let formattedDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(formattedDate);
   };
@@ -62,6 +62,19 @@ const AddEditModal = props => {
 
   const showDatepicker = () => {
     showMode('date');
+  };
+
+  const saveData = () => {
+    if (!amount) alert('Enter the income/expense amount');
+    else if (!desc) alert('Enter the reason for income/expense');
+    else if (!date) alert('Select the date of income/expense');
+    else {
+      let transData = {
+        amount: amount,
+        desc: desc,
+        date: date,
+      };
+    }
   };
 
   return (
@@ -84,7 +97,8 @@ const AddEditModal = props => {
       {TextBox(onChangeDesc, desc, 'Description')}
       {DateBox(date, 'Date')}
       <TouchableOpacity
-        style={{flex: 0.2, alignItems: 'center', justifyContent: 'center'}}>
+        style={{flex: 0.2, alignItems: 'center', justifyContent: 'center'}}
+        onPress={() => saveData()}>
         <Text style={{color: colors.accent}}>Save</Text>
       </TouchableOpacity>
       {show && (

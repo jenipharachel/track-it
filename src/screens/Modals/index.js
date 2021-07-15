@@ -7,7 +7,7 @@ const Modals = props => {
   return (
     <View style={{flex: 1, justifyContent: 'flex-end'}}>
       <View style={{flex: 0.95}}>
-        <ViewModal {...props} />
+        <AddEditModal {...props} />
       </View>
     </View>
   );

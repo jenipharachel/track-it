@@ -10,16 +10,17 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import {TextBox, SaveButton, SwitchToggle} from '../../components';
 import colors from '../../theme/colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {connect} from 'react-redux';
 import moment from 'moment';
 
 const AddEditModal = props => {
-  const [amount, onChangeAmt] = React.useState('');
-  const [desc, onChangeDesc] = React.useState('');
+  const [amount, onChangeAmt] = useState('');
+  const [desc, onChangeDesc] = useState('');
   const [date, setDate] = useState('');
-  const dateTime = new Date();
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [transactionType, setTransactionType] = useState('Income');
+  const dateTime = new Date();
 
   const TextBox = (func, value, placeholder) => {
     return (
@@ -69,12 +70,36 @@ const AddEditModal = props => {
     else if (!desc) alert('Enter the reason for income/expense');
     else if (!date) alert('Select the date of income/expense');
     else {
-      let transData = {
-        amount: amount,
-        desc: desc,
-        date: date,
-      };
+      validateWithBankBalance();
     }
+  };
+
+  const validateWithBankBalance = () => {
+    const {balance, income, expense} = props;
+    let status = {balance, income, expense};
+
+    if (transactionType == 'Expense') {
+      if (props.balance >= amount) {
+        status.balance -= amount;
+        status.expense += amount;
+        console.log(status, 'status');
+        props.navigation.pop();
+      } else {
+        alert('Purchase cannot be made since Bank balance is 0');
+      }
+    } else {
+      status.balance += parseInt(amount);
+      status.income += parseInt(amount);
+      console.log(status, 'stat us');
+      props.navigation.pop();
+    }
+
+    let transData = {
+      amount: amount,
+      desc: desc,
+      date: date,
+      transactionType: transactionType,
+    };
   };
 
   return (
@@ -133,5 +158,9 @@ const styles = StyleSheet.create({
     color: colors.lightblack,
   },
 });
+function mapStateToProps(state) {
+  const {balance, income, expense} = state.status;
+  return {balance: balance, income: income, expense: expense};
+}
 
-export default AddEditModal;
+export default connect(mapStateToProps)(AddEditModal);

@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import colors from '../../theme/colors';
 // import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {updateBalance} from '../../redux/actions';
+import {updateBalance, addTransaction} from '../../redux/actions';
 import moment from 'moment';
 
 const AddEditModal = props => {
@@ -80,28 +80,31 @@ const AddEditModal = props => {
     const {balance, income, expense} = props;
     let status = {balance, income, expense};
 
+    let transData = {
+      amount: amount,
+      desc: desc,
+      transactionType: transactionType,
+    };
+
     if (transactionType == 'Expense') {
       if (props.balance >= amount) {
         status.balance -= parseInt(amount);
         status.expense += parseInt(amount);
-        props.updateBalance(status);
-        props.navigation.pop();
+        updateDataToState(status, transData, date);
       } else {
         alert('Purchase cannot be made since Bank balance is 0');
       }
     } else {
       status.balance += parseInt(amount);
       status.income += parseInt(amount);
-      props.updateBalance(status);
-      props.navigation.pop();
+      updateDataToState(status, transData, date);
     }
+  };
 
-    let transData = {
-      amount: amount,
-      desc: desc,
-      date: date,
-      transactionType: transactionType,
-    };
+  const updateDataToState = (status, transData, date) => {
+    props.updateBalance(status);
+    props.addTransaction(transData, date);
+    props.navigation.pop();
   };
 
   return (
@@ -168,6 +171,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
   updateBalance,
+  addTransaction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddEditModal);

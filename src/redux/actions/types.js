@@ -1,3 +1,4 @@
 export default {
   GET_BALANCE: 'GET_BALANCE',
+  UPDATE_BALANCE: 'UPDATE_BALANCE',
 };

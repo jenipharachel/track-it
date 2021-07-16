@@ -6,11 +6,13 @@ import {
   StyleSheet,
   TextInput,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
 import {TextBox, SaveButton, SwitchToggle} from '../../components';
-import colors from '../../theme/colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import Icon from 'react-native-vector-icons/AntDesign';
+import colors from '../../theme/colors';
+// import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import {updateBalance} from '../../redux/actions';
 import moment from 'moment';
 
 const AddEditModal = props => {
@@ -80,9 +82,9 @@ const AddEditModal = props => {
 
     if (transactionType == 'Expense') {
       if (props.balance >= amount) {
-        status.balance -= amount;
-        status.expense += amount;
-        console.log(status, 'status');
+        status.balance -= parseInt(amount);
+        status.expense += parseInt(amount);
+        props.updateBalance(status);
         props.navigation.pop();
       } else {
         alert('Purchase cannot be made since Bank balance is 0');
@@ -90,7 +92,7 @@ const AddEditModal = props => {
     } else {
       status.balance += parseInt(amount);
       status.income += parseInt(amount);
-      console.log(status, 'stat us');
+      props.updateBalance(status);
       props.navigation.pop();
     }
 
@@ -158,9 +160,14 @@ const styles = StyleSheet.create({
     color: colors.lightblack,
   },
 });
+
 function mapStateToProps(state) {
   const {balance, income, expense} = state.status;
   return {balance: balance, income: income, expense: expense};
 }
 
-export default connect(mapStateToProps)(AddEditModal);
+const mapDispatchToProps = {
+  updateBalance,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddEditModal);

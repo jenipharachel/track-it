@@ -6,8 +6,14 @@ const defaultState = {
   expense: 0,
 };
 
-const status = function (state = defaultState, action = {}) {
+const status = function (state = defaultState, action) {
   switch (action.type) {
+    case ActionType.UPDATE_BALANCE:
+      return {
+        ...state,
+        ...action.status,
+      };
+
     default:
       return state;
   }

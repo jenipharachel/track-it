@@ -6,8 +6,9 @@ export function addBasedOnDate(incomingTransaction, date, transactions) {
   if (transactions) {
     let isDateExist = transactions.some(el => el.date == date);
     if (isDateExist)
-      transactions.forEach(item => {
-        if (item.date == date) item.trans.unshift(incomingTransaction);
+      transactions.forEach(dayTransactions => {
+        if (dayTransactions.date == date)
+          dayTransactions.trans.unshift(incomingTransaction);
       });
     else transactions.push(dayTransactions);
     return transactions;
@@ -16,6 +17,21 @@ export function addBasedOnDate(incomingTransaction, date, transactions) {
     newState.push(dayTransactions);
     return newState;
   }
+}
+
+export function updateBasedOnID(
+  currentTransaction,
+  date,
+  transactions,
+  recordID,
+) {
+  transactions.forEach(dayTransactions => {
+    if (dayTransactions.date == date) {
+      dayTransactions.trans[recordID] = currentTransaction;
+      return dayTransactions;
+    }
+  });
+  return transactions;
 }
 
 export function deleteSelectedRecord(recordID, date, transactions) {

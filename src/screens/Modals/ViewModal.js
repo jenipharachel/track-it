@@ -12,7 +12,11 @@ import {TextBtn} from '../../components/Button';
 import colors from '../../theme/colors';
 import {connect} from 'react-redux';
 import {deleteSelectedRecord, modifyStatus} from './helpers';
-import {updateBalance, updateTransaction} from '../../redux/actions';
+import {
+  updateBalance,
+  updateTransaction,
+  changeModalView,
+} from '../../redux/actions';
 
 const ViewModal = props => {
   const {record, date, recordID} = props.route.params;
@@ -28,6 +32,10 @@ const ViewModal = props => {
       props.updateTransaction(modifiedList);
     }
     props.navigation.pop();
+  };
+
+  const moveToEditScreen = () => {
+    props.changeModalView('Add');
   };
 
   return (
@@ -53,7 +61,7 @@ const ViewModal = props => {
           <Text style={{color: colors.lightblack, fontSize: 14}}>{date}</Text>
         </View>
         <View style={{flex: 0.2}}>
-          <TextBtn label={'Edit'} onPress={() => {}} />
+          <TextBtn label={'Edit'} onPress={() => moveToEditScreen()} />
           <TextBtn
             label={'Delete'}
             onPress={() => deleteRecord(date, recordID)}
@@ -80,6 +88,6 @@ function mapStateToProps(state) {
   return {status, transactionHistory};
 }
 
-const mapDispatchToProps = {updateBalance, updateTransaction};
+const mapDispatchToProps = {updateBalance, updateTransaction, changeModalView};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ViewModal);

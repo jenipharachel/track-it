@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -14,16 +14,27 @@ import colors from '../../theme/colors';
 import {connect} from 'react-redux';
 import {updateBalance, updateTransaction} from '../../redux/actions';
 import moment from 'moment';
-import {addBasedOnDate} from './helpers';
+import {addBasedOnDate, updateBasedOnID} from './helpers';
 
 const AddEditModal = props => {
-  const [amount, onChangeAmt] = useState('');
-  const [desc, onChangeDesc] = useState('');
+  const [amount, setAmount] = useState('');
+  const [desc, setDesc] = useState('');
   const [date, setDate] = useState('');
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
+  const [recordID, setRecordID] = useState('');
   const [transactionType, setTransactionType] = useState('Income');
   const dateTime = new Date();
+
+  useEffect(() => {
+    if (props.route.params) {
+      const {record, date, recordID} = props.route.params;
+      setDate(date);
+      setAmount(record.amount);
+      setDesc(record.desc);
+      setRecordID(recordID);
+    }
+  }, []);
 
   const TextBox = (func, value, placeholder) => {
     return (
@@ -40,7 +51,8 @@ const AddEditModal = props => {
     return (
       <TouchableOpacity
         style={{flex: 0.08, margin: 15}}
-        onPress={showDatepicker}>
+        onPress={showDatepicker}
+        disabled={`${recordID}` ? true : false}>
         <TextInput
           style={[styles.input, {flex: 1, margin: 0}]}
           value={`${value}`}
@@ -81,24 +93,35 @@ const AddEditModal = props => {
     const {balance, income, expense, transactionHistory} = props;
     let status = {balance, income, expense};
     let currentTransaction = {amount, desc, transactionType};
+    let isEditTransaction = `${recordID}`;
+    let record = isEditTransaction && props.route.params.record;
 
-    let updatedTransaction = addBasedOnDate(
-      currentTransaction,
-      date,
-      transactionHistory,
-    );
+    console.log(`${recordID}`, 'recordID');
+    let updatedTransaction = isEditTransaction
+      ? updateBasedOnID(currentTransaction, date, transactionHistory, recordID)
+      : addBasedOnDate(currentTransaction, date, transactionHistory);
 
     if (transactionType == 'Expense') {
       if (props.balance >= amount) {
-        status.balance -= parseInt(amount);
-        status.expense += parseInt(amount);
+        if (record) {
+          status.balance = balance + record.amount - parseInt(amount);
+          status.expense = balance - record.amount + parseInt(amount);
+        } else {
+          status.balance -= parseInt(amount);
+          status.expense += parseInt(amount);
+        }
         updateDataToState(status, updatedTransaction);
       } else {
         alert('Purchase cannot be made since Bank balance is 0');
       }
     } else {
-      status.balance += parseInt(amount);
-      status.income += parseInt(amount);
+      if (record) {
+        status.balance = balance - record.amount + parseInt(amount);
+        status.income = balance - record.amount + parseInt(amount);
+      } else {
+        status.balance += parseInt(amount);
+        status.income += parseInt(amount);
+      }
       updateDataToState(status, updatedTransaction);
     }
   };
@@ -125,8 +148,8 @@ const AddEditModal = props => {
         transType={transactionType}
         setTransType={setTransactionType}
       />
-      {TextBox(onChangeAmt, amount, 'Amount')}
-      {TextBox(onChangeDesc, desc, 'Description')}
+      {TextBox(setAmount, amount, 'Amount')}
+      {TextBox(setDesc, desc, 'Description')}
       {DateBox(date, 'Date')}
       <TextBtn label={'Save'} onPress={saveData} />
       {show && (

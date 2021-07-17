@@ -6,7 +6,7 @@ const addBtn = props => {
   return (
     <TouchableOpacity
       style={styles.button}
-      onPress={() => props.navigation.navigate('Modals')}>
+      onPress={() => props.onButtonClick()}>
       <Icon name="plus" size={20} color="#FFFFFF" />
     </TouchableOpacity>
   );

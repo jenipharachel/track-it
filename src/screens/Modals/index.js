@@ -2,15 +2,24 @@ import React from 'react';
 import {View} from 'react-native';
 import AddEditModal from './AddEditModal';
 import ViewModal from './ViewModal';
+import {connect} from 'react-redux';
 
 const Modals = props => {
   return (
     <View style={{flex: 1, justifyContent: 'flex-end'}}>
       <View style={{flex: 0.95}}>
-        <AddEditModal {...props} />
+        {props.modalType == 'Add' ? (
+          <AddEditModal {...props} />
+        ) : (
+          <ViewModal {...props} />
+        )}
       </View>
     </View>
   );
 };
 
-export default Modals;
+function mapStateToProps(state) {
+  return {modalType: state.modal.modalType};
+}
+
+export default connect(mapStateToProps)(Modals);

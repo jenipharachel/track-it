@@ -3,14 +3,21 @@ import {View, Text, StyleSheet, FlatList} from 'react-native';
 import {Button} from '..';
 import {TransactionCard} from '../../theme';
 import {connect} from 'react-redux';
+import {changeModalView} from '../../redux/actions';
 import _ from 'lodash';
 
 const TrackHistory = props => {
-  const ViewData = () => {
+  const ViewData = (record, date) => {
+    props.changeModalView('View');
+    props.navigation.navigate('Modals', {record, date});
+  };
+
+  const AddData = () => {
+    props.changeModalView('Add');
     props.navigation.navigate('Modals');
   };
 
-  displayTransactions = transactionHistory => {
+  const displayTransactions = transactionHistory => {
     return (
       transactionHistory && (
         <FlatList
@@ -25,7 +32,7 @@ const TrackHistory = props => {
                     label={record.desc}
                     value={record.amount}
                     transType={record.transactionType}
-                    ViewData={ViewData}
+                    ViewData={() => ViewData(record, item.date)}
                   />
                 ))}
               </View>
@@ -36,6 +43,7 @@ const TrackHistory = props => {
       )
     );
   };
+
   return (
     <View style={styles.container}>
       <View style={{flex: 0.8}}>
@@ -43,7 +51,7 @@ const TrackHistory = props => {
           displayTransactions(props.transactionHistory)}
       </View>
       <View style={{flex: 0.2, justifyContent: 'center', alignItems: 'center'}}>
-        <Button {...props} />
+        <Button onButtonClick={AddData} {...props} />
       </View>
     </View>
   );
@@ -58,4 +66,8 @@ function mapStateToProps(state) {
   return {transactionHistory: state.transactions.transactionHistory};
 }
 
-export default connect(mapStateToProps)(TrackHistory);
+const mapDispatchToProps = {
+  changeModalView,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TrackHistory);

@@ -10,10 +10,10 @@ import {TextBox, SaveButton, SwitchToggle} from '../../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/AntDesign';
 import colors from '../../theme/colors';
-// import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {updateBalance, addTransaction} from '../../redux/actions';
 import moment from 'moment';
+import {addBasedOnDate} from './helpers';
 
 const AddEditModal = props => {
   const [amount, onChangeAmt] = useState('');
@@ -77,33 +77,34 @@ const AddEditModal = props => {
   };
 
   const validateWithBankBalance = () => {
-    const {balance, income, expense} = props;
+    const {balance, income, expense, transactionHistory} = props;
     let status = {balance, income, expense};
+    let currentTransaction = {amount, desc, transactionType};
 
-    let transData = {
-      amount: amount,
-      desc: desc,
-      transactionType: transactionType,
-    };
+    let updatedTransaction = addBasedOnDate(
+      currentTransaction,
+      date,
+      transactionHistory,
+    );
 
     if (transactionType == 'Expense') {
       if (props.balance >= amount) {
         status.balance -= parseInt(amount);
         status.expense += parseInt(amount);
-        updateDataToState(status, transData, date);
+        updateDataToState(status, updatedTransaction);
       } else {
         alert('Purchase cannot be made since Bank balance is 0');
       }
     } else {
       status.balance += parseInt(amount);
       status.income += parseInt(amount);
-      updateDataToState(status, transData, date);
+      updateDataToState(status, updatedTransaction);
     }
   };
 
-  const updateDataToState = (status, transData, date) => {
+  const updateDataToState = (status, updatedTransactions) => {
     props.updateBalance(status);
-    props.addTransaction(transData, date);
+    props.addTransaction(updatedTransactions);
     props.navigation.pop();
   };
 
@@ -166,7 +167,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   const {balance, income, expense} = state.status;
-  return {balance: balance, income: income, expense: expense};
+  const {transactionHistory} = state.transactions;
+  return {balance, income, expense, transactionHistory};
 }
 
 const mapDispatchToProps = {

@@ -1,11 +1,10 @@
 import ActionType from './types';
 import store from '../store';
 
-export function addTransaction(incomingTransaction, date) {
+export function addTransaction(transactionList) {
   return {
     type: ActionType.ADD_INCOME_EXPENSE_DATA,
-    incomingTransaction: incomingTransaction,
-    date: date,
+    transactionHistory: transactionList,
   };
 }
 

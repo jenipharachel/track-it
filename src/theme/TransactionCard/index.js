@@ -1,15 +1,19 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import colors from '../colors';
 
 const TransactionCard = props => {
   return (
-    <TouchableOpacity style={styles.card} onPress={() => props.ViewData()}>
+    <TouchableOpacity
+      key={props.index}
+      style={styles.card}
+      onPress={() => props.ViewData()}>
       <View style={styles.alignment}>
         <Text style={{fontSize: 14}}>{props.label}</Text>
         <Text
           style={{
             fontSize: 14,
-            color: props.transType ? '#D10000' : '#00B152',
+            color: props.transType == 'Income' ? colors.income : colors.expense,
           }}>
           {props.value}
         </Text>

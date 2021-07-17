@@ -6,12 +6,13 @@ import {
   StyleSheet,
   TextInput,
 } from 'react-native';
-import {TextBox, SaveButton, SwitchToggle} from '../../components';
+import {TextBox, SwitchToggle} from '../../components';
+import {TextBtn} from '../../components/Button';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/AntDesign';
 import colors from '../../theme/colors';
 import {connect} from 'react-redux';
-import {updateBalance, addTransaction} from '../../redux/actions';
+import {updateBalance, updateTransaction} from '../../redux/actions';
 import moment from 'moment';
 import {addBasedOnDate} from './helpers';
 
@@ -104,7 +105,7 @@ const AddEditModal = props => {
 
   const updateDataToState = (status, updatedTransactions) => {
     props.updateBalance(status);
-    props.addTransaction(updatedTransactions);
+    props.updateTransaction(updatedTransactions);
     props.navigation.pop();
   };
 
@@ -127,11 +128,7 @@ const AddEditModal = props => {
       {TextBox(onChangeAmt, amount, 'Amount')}
       {TextBox(onChangeDesc, desc, 'Description')}
       {DateBox(date, 'Date')}
-      <TouchableOpacity
-        style={{flex: 0.2, alignItems: 'center', justifyContent: 'center'}}
-        onPress={() => saveData()}>
-        <Text style={{color: colors.accent}}>Save</Text>
-      </TouchableOpacity>
+      <TextBtn label={'Save'} onPress={saveData} />
       {show && (
         <DateTimePicker
           testID="dateTimePicker"
@@ -171,9 +168,6 @@ function mapStateToProps(state) {
   return {balance, income, expense, transactionHistory};
 }
 
-const mapDispatchToProps = {
-  updateBalance,
-  addTransaction,
-};
+const mapDispatchToProps = {updateBalance, updateTransaction};
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddEditModal);

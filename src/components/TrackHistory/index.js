@@ -1,15 +1,19 @@
 import React from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
-import {Button} from '..';
+import {AddBtn} from '../Button';
 import {TransactionCard} from '../../theme';
 import {connect} from 'react-redux';
 import {changeModalView} from '../../redux/actions';
 import _ from 'lodash';
 
 const TrackHistory = props => {
-  const ViewData = (record, date) => {
+  const ViewData = (record, date, recordID) => {
     props.changeModalView('View');
-    props.navigation.navigate('Modals', {record, date});
+    props.navigation.navigate('Modals', {
+      record,
+      date,
+      recordID,
+    });
   };
 
   const AddData = () => {
@@ -32,7 +36,7 @@ const TrackHistory = props => {
                     label={record.desc}
                     value={record.amount}
                     transType={record.transactionType}
-                    ViewData={() => ViewData(record, item.date)}
+                    ViewData={() => ViewData(record, item.date, id)}
                   />
                 ))}
               </View>
@@ -51,7 +55,7 @@ const TrackHistory = props => {
           displayTransactions(props.transactionHistory)}
       </View>
       <View style={{flex: 0.2, justifyContent: 'center', alignItems: 'center'}}>
-        <Button onButtonClick={AddData} {...props} />
+        <AddBtn onButtonClick={AddData} {...props} />
       </View>
     </View>
   );
@@ -66,8 +70,6 @@ function mapStateToProps(state) {
   return {transactionHistory: state.transactions.transactionHistory};
 }
 
-const mapDispatchToProps = {
-  changeModalView,
-};
+const mapDispatchToProps = {changeModalView};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrackHistory);

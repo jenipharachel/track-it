@@ -11,11 +11,14 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import colors from '../../theme/colors';
 
 const ViewModal = props => {
+  const {record, date} = props.route.params;
+  let textColor =
+    record.transactionType == 'Income' ? colors.income : colors.expense;
   return (
     <View style={styles.modalStyle}>
       <View style={{flex: 0.2, flexDirection: 'row'}}>
         <Text style={{flex: 0.95, textAlign: 'center', fontSize: 18}}>
-          Expense
+          {record.transactionType}
         </Text>
         <TouchableOpacity
           style={{flex: 0.05}}
@@ -25,15 +28,13 @@ const ViewModal = props => {
       </View>
       <View style={{flex: 0.8, alignItems: 'center'}}>
         <View style={{flex: 0.15}}>
-          <Text style={{color: colors.expense, fontSize: 32}}>$329</Text>
+          <Text style={{color: textColor, fontSize: 32}}>${record.amount}</Text>
         </View>
         <View style={{flex: 0.2, alignItems: 'center'}}>
           <Text style={{color: colors.lightblack, fontSize: 18}}>
-            Car tyre change
+            {record.desc}
           </Text>
-          <Text style={{color: colors.lightblack, fontSize: 14}}>
-            April 20, 2021
-          </Text>
+          <Text style={{color: colors.lightblack, fontSize: 14}}>{date}</Text>
         </View>
         <View style={{flex: 0.2}}>
           <TouchableOpacity style={{flex: 0.2, alignItems: 'center'}}>

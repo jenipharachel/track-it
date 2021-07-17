@@ -15,7 +15,7 @@ const TransactionCard = props => {
             fontSize: 14,
             color: props.transType == 'Income' ? colors.income : colors.expense,
           }}>
-          {props.value}
+          ${props.value}
         </Text>
       </View>
     </TouchableOpacity>

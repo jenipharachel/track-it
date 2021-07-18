@@ -96,7 +96,6 @@ const AddEditModal = props => {
     let isEditTransaction = `${recordID}`;
     let record = isEditTransaction && props.route.params.record;
 
-    console.log(`${recordID}`, 'recordID');
     let updatedTransaction = isEditTransaction
       ? updateBasedOnID(currentTransaction, date, transactionHistory, recordID)
       : addBasedOnDate(currentTransaction, date, transactionHistory);

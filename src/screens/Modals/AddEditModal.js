@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,20 +6,35 @@ import {
   StyleSheet,
   TextInput,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
-import {TextBox, SaveButton, SwitchToggle} from '../../components';
-import colors from '../../theme/colors';
+import {TextBox, SwitchToggle} from '../../components';
+import {TextBtn} from '../../components/Button';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import Icon from 'react-native-vector-icons/AntDesign';
+import colors from '../../theme/colors';
+import {connect} from 'react-redux';
+import {updateBalance, updateTransaction} from '../../redux/actions';
 import moment from 'moment';
+import {addBasedOnDate, updateBasedOnID} from './helpers';
 
 const AddEditModal = props => {
-  const [amount, onChangeAmt] = React.useState('');
-  const [desc, onChangeDesc] = React.useState('');
+  const [amount, setAmount] = useState('');
+  const [desc, setDesc] = useState('');
   const [date, setDate] = useState('');
-  const dateTime = new Date();
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
+  const [recordID, setRecordID] = useState('');
   const [transactionType, setTransactionType] = useState('Income');
+  const dateTime = new Date();
+
+  useEffect(() => {
+    if (props.route.params) {
+      const {record, date, recordID} = props.route.params;
+      setDate(date);
+      setAmount(record.amount);
+      setDesc(record.desc);
+      setRecordID(recordID);
+    }
+  }, []);
 
   const TextBox = (func, value, placeholder) => {
     return (
@@ -36,7 +51,8 @@ const AddEditModal = props => {
     return (
       <TouchableOpacity
         style={{flex: 0.08, margin: 15}}
-        onPress={showDatepicker}>
+        onPress={showDatepicker}
+        disabled={`${recordID}` ? true : false}>
         <TextInput
           style={[styles.input, {flex: 1, margin: 0}]}
           value={`${value}`}
@@ -69,12 +85,50 @@ const AddEditModal = props => {
     else if (!desc) alert('Enter the reason for income/expense');
     else if (!date) alert('Select the date of income/expense');
     else {
-      let transData = {
-        amount: amount,
-        desc: desc,
-        date: date,
-      };
+      validateWithBankBalance();
     }
+  };
+
+  const validateWithBankBalance = () => {
+    const {balance, income, expense, transactionHistory} = props;
+    let status = {balance, income, expense};
+    let currentTransaction = {amount, desc, transactionType};
+    let isEditTransaction = `${recordID}`;
+    let record = isEditTransaction && props.route.params.record;
+
+    let updatedTransaction = isEditTransaction
+      ? updateBasedOnID(currentTransaction, date, transactionHistory, recordID)
+      : addBasedOnDate(currentTransaction, date, transactionHistory);
+
+    if (transactionType == 'Expense') {
+      if (props.balance >= amount) {
+        if (record) {
+          status.balance = balance + record.amount - parseInt(amount);
+          status.expense = balance - record.amount + parseInt(amount);
+        } else {
+          status.balance -= parseInt(amount);
+          status.expense += parseInt(amount);
+        }
+        updateDataToState(status, updatedTransaction);
+      } else {
+        alert('Purchase cannot be made since Bank balance is 0');
+      }
+    } else {
+      if (record) {
+        status.balance = balance - record.amount + parseInt(amount);
+        status.income = balance - record.amount + parseInt(amount);
+      } else {
+        status.balance += parseInt(amount);
+        status.income += parseInt(amount);
+      }
+      updateDataToState(status, updatedTransaction);
+    }
+  };
+
+  const updateDataToState = (status, updatedTransactions) => {
+    props.updateBalance(status);
+    props.updateTransaction(updatedTransactions);
+    props.navigation.pop();
   };
 
   return (
@@ -93,14 +147,10 @@ const AddEditModal = props => {
         transType={transactionType}
         setTransType={setTransactionType}
       />
-      {TextBox(onChangeAmt, amount, 'Amount')}
-      {TextBox(onChangeDesc, desc, 'Description')}
+      {TextBox(setAmount, amount, 'Amount')}
+      {TextBox(setDesc, desc, 'Description')}
       {DateBox(date, 'Date')}
-      <TouchableOpacity
-        style={{flex: 0.2, alignItems: 'center', justifyContent: 'center'}}
-        onPress={() => saveData()}>
-        <Text style={{color: colors.accent}}>Save</Text>
-      </TouchableOpacity>
+      <TextBtn label={'Save'} onPress={saveData} />
       {show && (
         <DateTimePicker
           testID="dateTimePicker"
@@ -134,4 +184,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddEditModal;
+function mapStateToProps(state) {
+  const {balance, income, expense} = state.status;
+  const {transactionHistory} = state.transactions;
+  return {balance, income, expense, transactionHistory};
+}
+
+const mapDispatchToProps = {updateBalance, updateTransaction};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddEditModal);

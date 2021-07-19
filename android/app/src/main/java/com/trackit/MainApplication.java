@@ -9,10 +9,11 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
-// import com.facebook.react.bridge.JSIModulePackage;
+import com.facebook.react.bridge.JSIModulePackage;
 // import com.reactnativemmkv.MmkvModulePackage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import com.trackit.TrackItJSIPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -35,6 +36,11 @@ public class MainApplication extends Application implements ReactApplication {
         @Override
         protected String getJSMainModuleName() {
           return "index";
+        }
+
+        @Override
+        protected JSIModulePackage getJSIModulePackage() {
+          return new TrackItJSIPackage(); // <-- your package's name
         }
 
         //  @Override

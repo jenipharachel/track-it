@@ -8,10 +8,10 @@ const Modals = props => {
   return (
     <View style={{flex: 1, justifyContent: 'flex-end'}}>
       <View style={{flex: 0.95}}>
-        {props.modalType == 'Add' ? (
-          <AddEditModal {...props} />
-        ) : (
+        {props.modalType == 'View' ? (
           <ViewModal {...props} />
+        ) : (
+          <AddEditModal {...props} />
         )}
       </View>
     </View>

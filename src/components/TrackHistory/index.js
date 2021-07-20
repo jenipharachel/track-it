@@ -5,8 +5,11 @@ import {TransactionCard} from '../../theme';
 import {connect} from 'react-redux';
 import {changeModalView} from '../../redux/actions';
 import _ from 'lodash';
+import colors from '../../theme/colors';
+import moment from 'moment';
 
 const TrackHistory = props => {
+  const currentDate = moment(new Date()).format('LL');
   const ViewData = (record, date, recordID) => {
     props.changeModalView('View');
     props.navigation.navigate('Modals', {
@@ -29,7 +32,9 @@ const TrackHistory = props => {
           renderItem={({item, index}) => {
             return (
               <View key={index} style={{flex: 1}}>
-                <Text style={styles.title}>{item.date}</Text>
+                <Text style={styles.title}>
+                  {currentDate == item.date ? 'Today' : item.date}
+                </Text>
                 {item.trans.map((record, id) => (
                   <TransactionCard
                     key={id}
@@ -62,7 +67,7 @@ const TrackHistory = props => {
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 0.7, backgroundColor: '#E5E5E5', padding: 10},
+  container: {flex: 0.7, backgroundColor: colors.lightGrey, padding: 10},
   title: {fontSize: 12, textAlign: 'center'},
 });
 

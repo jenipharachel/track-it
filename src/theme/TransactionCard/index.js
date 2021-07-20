@@ -25,12 +25,12 @@ const TransactionCard = props => {
 const styles = StyleSheet.create({
   card: {
     flex: 0.07,
-    borderColor: '#D3D3D3',
+    borderColor: colors.grey,
     borderRadius: 10,
     borderWidth: 1,
     margin: 10,
     padding: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
   },
   alignment: {
     flex: 1,

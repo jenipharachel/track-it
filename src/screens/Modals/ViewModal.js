@@ -11,12 +11,13 @@ import {TextBtn} from '../../components/Button';
 // import {TextBox} from '../../components';
 import colors from '../../theme/colors';
 import {connect} from 'react-redux';
-import {deleteSelectedRecord, modifyStatus} from './helpers';
+import {deleteSelectedRecord, modifyStatusForDeletion} from './helpers';
 import {
   updateBalance,
   updateTransaction,
   changeModalView,
 } from '../../redux/actions';
+import {ModalHeader} from '../../theme';
 
 const ViewModal = props => {
   const {record, date, recordID} = props.route.params;
@@ -26,7 +27,7 @@ const ViewModal = props => {
   const deleteRecord = (date, recordID) => {
     const {transactionHistory, status} = props;
     let modifiedList = deleteSelectedRecord(recordID, date, transactionHistory);
-    let modifiedStatus = modifyStatus(status, record);
+    let modifiedStatus = modifyStatusForDeletion(status, record);
     if (modifiedStatus) {
       props.updateBalance(modifiedStatus);
       props.updateTransaction(modifiedList);
@@ -35,22 +36,16 @@ const ViewModal = props => {
   };
 
   const moveToEditScreen = () => {
-    props.changeModalView('Add');
+    props.changeModalView('Edit');
   };
 
   return (
     <View style={styles.modalStyle}>
-      <View style={{flex: 0.2, flexDirection: 'row'}}>
-        <Text style={{flex: 0.95, textAlign: 'center', fontSize: 18}}>
-          {record.transactionType}
-        </Text>
-        <TouchableOpacity
-          style={{flex: 0.05}}
-          onPress={() => props.navigation.pop()}>
-          <Icon name="close" size={20} color={colors.black} />
-        </TouchableOpacity>
-      </View>
-      <View style={{flex: 0.8, alignItems: 'center'}}>
+      <ModalHeader
+        title={record.transactionType}
+        closeModal={() => props.navigation.pop()}
+      />
+      <View style={styles.modalContent}>
         <View style={{flex: 0.15}}>
           <Text style={{color: textColor, fontSize: 32}}>${record.amount}</Text>
         </View>
@@ -75,10 +70,16 @@ const ViewModal = props => {
 const styles = StyleSheet.create({
   modalStyle: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     borderTopLeftRadius: 30,
     borderTopEndRadius: 30,
     padding: 20,
+  },
+  modalContent: {
+    flex: 0.93,
+    alignItems: 'center',
+    marginTop: 15,
+    marginRight: 10,
   },
 });
 

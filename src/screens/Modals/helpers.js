@@ -47,7 +47,7 @@ export function deleteSelectedRecord(recordID, date, transactions) {
   return modifiedTransList;
 }
 
-export function modifyStatus(status, record) {
+export function modifyStatusForDeletion(status, record) {
   if (record.transactionType == 'Expense') {
     status.balance += parseInt(record.amount);
     status.expense -= parseInt(record.amount);
@@ -61,5 +61,35 @@ export function modifyStatus(status, record) {
       alert('Balance cannot be below 0');
       return null;
     }
+  }
+}
+
+export function validateStatus(
+  curntBalance,
+  newAmt,
+  record,
+  status,
+  transactionType,
+) {
+  if (transactionType == 'Expense') {
+    if (curntBalance >= newAmt) {
+      status.expense += parseInt(newAmt);
+      if (record) {
+        if (transactionType == record.transactionType)
+          status.expense -= parseInt(record.amount);
+        else status.income -= parseInt(record.amount);
+      }
+      status.balance = status.income - status.expense;
+      return status;
+    } else alert('Purchase cannot be made since Bank balance is 0');
+  } else {
+    status.income += parseInt(newAmt);
+    if (record) {
+      if (transactionType == record.transactionType)
+        status.income -= parseInt(record.amount);
+      else status.expense -= parseInt(record.amount);
+    }
+    status.balance = status.income - status.expense;
+    return status;
   }
 }

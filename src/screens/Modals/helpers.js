@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export function addBasedOnDate(incomingTransaction, date, transactions) {
   let dayTransactions = {
     date: date,
@@ -11,13 +13,20 @@ export function addBasedOnDate(incomingTransaction, date, transactions) {
           dayTransactions.trans.unshift(incomingTransaction);
       });
     else transactions.push(dayTransactions);
-    return transactions;
+    return sortTransactionsByDate(transactions);
   } else {
     let newState = [];
     newState.push(dayTransactions);
     return newState;
   }
 }
+
+const sortTransactionsByDate = transactionsList => {
+  let sortedList = _.sortBy(transactionsList, function (dayTransactions) {
+    return new Date(dayTransactions.date);
+  }).reverse();
+  return sortedList;
+};
 
 export function updateBasedOnID(
   currentTransaction,
@@ -31,7 +40,7 @@ export function updateBasedOnID(
       return dayTransactions;
     }
   });
-  return transactions;
+  return sortTransactionsByDate(transactions);
 }
 
 export function deleteSelectedRecord(recordID, date, transactions) {

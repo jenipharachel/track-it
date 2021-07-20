@@ -1,16 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  TextInput,
-} from 'react-native';
+import {View, TouchableOpacity, StyleSheet, TextInput} from 'react-native';
 import {TextBox, SwitchToggle} from '../../components';
 import {TextBtn} from '../../components/Button';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import Icon from 'react-native-vector-icons/AntDesign';
-import colors from '../../theme/colors';
+import {colors, ModalHeader} from '../../theme';
 import {connect} from 'react-redux';
 import {updateBalance, updateTransaction} from '../../redux/actions';
 import moment from 'moment';
@@ -133,34 +126,30 @@ const AddEditModal = props => {
 
   return (
     <View style={styles.modalStyle}>
-      <View style={{flexDirection: 'row'}}>
-        <Text style={{flex: 0.95, textAlign: 'center', fontSize: 18}}>
-          Add Income/Expense
-        </Text>
-        <TouchableOpacity
-          style={{flex: 0.05}}
-          onPress={() => props.navigation.pop()}>
-          <Icon name="close" size={20} color={colors.black} />
-        </TouchableOpacity>
-      </View>
-      <SwitchToggle
-        transType={transactionType}
-        setTransType={setTransactionType}
+      <ModalHeader
+        title={`Add Income/Expense`}
+        closeModal={() => props.navigation.pop()}
       />
-      {TextBox(setAmount, amount, 'Amount')}
-      {TextBox(setDesc, desc, 'Description')}
-      {DateBox(date, 'Date')}
-      <TextBtn label={'Save'} onPress={saveData} />
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={dateTime}
-          mode={mode}
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
+      <View style={{flex: 0.93}}>
+        <SwitchToggle
+          transType={transactionType}
+          setTransType={setTransactionType}
         />
-      )}
+        {TextBox(setAmount, amount, 'Amount')}
+        {TextBox(setDesc, desc, 'Description')}
+        {DateBox(date, 'Date')}
+        <TextBtn label={'Save'} onPress={saveData} />
+        {show && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={dateTime}
+            mode={mode}
+            is24Hour={true}
+            display="default"
+            onChange={onChange}
+          />
+        )}
+      </View>
     </View>
   );
 };

@@ -22,10 +22,11 @@ const SwitchToggle = ({transType, setTransType}) => {
   return (
     <View
       style={{
-        flex: 0.2,
+        flex: 0.1,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+        marginRight: 10,
       }}>
       {toggleBox('Income')}
       {toggleBox('Expense')}

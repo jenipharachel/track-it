@@ -168,7 +168,7 @@ const AddEditModal = props => {
 const styles = StyleSheet.create({
   modalStyle: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     borderTopLeftRadius: 30,
     borderTopEndRadius: 30,
     padding: 20,
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     flex: 0.04,
     borderWidth: 1,
     borderRadius: 10,
-    borderColor: '#E5E5E5',
+    borderColor: colors.grey,
     margin: 15,
     paddingLeft: 15,
     color: colors.lightblack,

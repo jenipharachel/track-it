@@ -5,6 +5,7 @@ import {TransactionCard} from '../../theme';
 import {connect} from 'react-redux';
 import {changeModalView} from '../../redux/actions';
 import _ from 'lodash';
+import colors from '../../theme/colors';
 
 const TrackHistory = props => {
   const ViewData = (record, date, recordID) => {
@@ -62,7 +63,7 @@ const TrackHistory = props => {
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 0.7, backgroundColor: '#E5E5E5', padding: 10},
+  container: {flex: 0.7, backgroundColor: colors.lightGrey, padding: 10},
   title: {fontSize: 12, textAlign: 'center'},
 });
 

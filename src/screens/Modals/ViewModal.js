@@ -75,7 +75,7 @@ const ViewModal = props => {
 const styles = StyleSheet.create({
   modalStyle: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     borderTopLeftRadius: 30,
     borderTopEndRadius: 30,
     padding: 20,

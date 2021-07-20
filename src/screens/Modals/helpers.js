@@ -74,17 +74,18 @@ export function modifyStatusForDeletion(status, record) {
 }
 
 export function validateStatus(
-  curntBalance,
+  currentBalance,
   newAmt,
   recordBeforeEdit,
   status,
   newtransactionType,
 ) {
-  if (recordBeforeEdit) {
-    if (recordBeforeEdit.transactionType == newtransactionType) {
-      // No change in Transaction type after edit
-      if (newtransactionType == 'Expense') {
-        if (curntBalance + recordBeforeEdit.amount >= newAmt) {
+  if (newtransactionType == 'Expense') {
+    // Expense Transaction
+    if (recordBeforeEdit) {
+      if (recordBeforeEdit.transactionType == newtransactionType) {
+        // No change in mode of transaction
+        if (currentBalance + recordBeforeEdit.amount >= newAmt) {
           status.expense =
             status.expense - recordBeforeEdit.amount + parseInt(newAmt);
           status.balance = status.income - status.expense;
@@ -93,15 +94,11 @@ export function validateStatus(
           alert('Purchase cannot be made since Bank balance is 0');
         }
       } else {
-        status.income =
-          status.income - recordBeforeEdit.amount + parseInt(newAmt);
-        status.balance = status.income - status.expense;
-        return status;
-      }
-    } else {
-      // Change in Transaction type after Edit
-      if (newtransactionType == 'Expense') {
-        if (parseInt(curntBalance) > parseInt(newAmt)) {
+        // Mode of transaction changed
+        if (
+          parseInt(currentBalance) - recordBeforeEdit.amount >=
+          parseInt(newAmt)
+        ) {
           status.expense = status.expense + parseInt(newAmt);
           status.income = status.income - recordBeforeEdit.amount;
           status.balance = status.income - status.expense;
@@ -109,29 +106,26 @@ export function validateStatus(
         } else {
           alert('Purchase cannot be made since Bank balance is 0');
         }
-      } else {
-        status.income = status.income + parseInt(newAmt);
-        status.expense = status.expense - recordBeforeEdit.amount;
-        status.balance = status.income - status.expense;
-
-        return status;
       }
-    }
-  } else {
-    // No edit, just addition of transactions
-    if (newtransactionType == 'Expense') {
-      if (curntBalance >= newAmt) {
+    } else {
+      if (currentBalance >= newAmt) {
         status.expense += parseInt(newAmt);
         status.balance = status.income - status.expense;
         return status;
       } else {
         alert('Purchase cannot be made since Bank balance is 0');
       }
-    } else {
-      status.income += parseInt(newAmt);
-      status.balance = status.income - status.expense;
-
-      return status;
     }
+  } else {
+    // Income Transaction
+    status.income += parseInt(newAmt);
+    if (recordBeforeEdit) {
+      if (recordBeforeEdit.transactionType == newtransactionType) {
+        // No change in mode of transaction after
+        status.income -= recordBeforeEdit.amount;
+      } else status.expense -= recordBeforeEdit.amount;
+    }
+    status.balance = status.income - status.expense;
+    return status;
   }
 }

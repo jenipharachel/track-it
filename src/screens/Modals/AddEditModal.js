@@ -90,10 +90,6 @@ const AddEditModal = props => {
     let isEditTransaction = props.modalType == 'Edit';
     let record = isEditTransaction && props.route.params.record;
 
-    let updatedTransaction = isEditTransaction
-      ? updateBasedOnID(currentTransaction, date, transactionHistory, recordID)
-      : addBasedOnDate(currentTransaction, date, transactionHistory);
-
     let updatedStatus = validateStatus(
       balance,
       amount,
@@ -101,7 +97,17 @@ const AddEditModal = props => {
       status,
       transactionType,
     );
-    if (updatedStatus) updateDataToState(updatedStatus, updatedTransaction);
+    if (updatedStatus) {
+      let updatedTransaction = isEditTransaction
+        ? updateBasedOnID(
+            currentTransaction,
+            date,
+            transactionHistory,
+            recordID,
+          )
+        : addBasedOnDate(currentTransaction, date, transactionHistory);
+      updateDataToState(updatedStatus, updatedTransaction);
+    }
   };
 
   const updateDataToState = (status, updatedTransactions) => {

@@ -12,6 +12,10 @@ const SwitchToggle = ({transType, setTransType}) => {
           flex: 0.2,
           backgroundColor: backgroundColor,
           padding: 10,
+          borderTopLeftRadius: value == 'Income' ? 5 : 0,
+          borderBottomLeftRadius: value == 'Income' ? 5 : 0,
+          borderTopRightRadius: value == 'Expense' ? 5 : 0,
+          borderBottomRightRadius: value == 'Expense' ? 5 : 0,
         }}
         onPress={() => setTransType(value)}>
         <Text style={{textAlign: 'center', color: fontColor}}>{value}</Text>

@@ -74,29 +74,56 @@ export function modifyStatusForDeletion(status, record) {
 }
 
 export function validateStatus(
-  curntBalance,
+  currentBalance,
   newAmt,
-  record,
+  recordBeforeEdit,
   status,
-  transactionType,
+  newtransactionType,
 ) {
-  if (transactionType == 'Expense') {
-    if (curntBalance >= newAmt) {
-      status.expense += parseInt(newAmt);
-      if (record) {
-        if (transactionType == record.transactionType)
-          status.expense -= parseInt(record.amount);
-        else status.income -= parseInt(record.amount);
+  if (newtransactionType == 'Expense') {
+    // Expense Transaction
+    if (recordBeforeEdit) {
+      if (recordBeforeEdit.transactionType == newtransactionType) {
+        // No change in mode of transaction
+        if (currentBalance + recordBeforeEdit.amount >= newAmt) {
+          status.expense =
+            status.expense - recordBeforeEdit.amount + parseInt(newAmt);
+          status.balance = status.income - status.expense;
+          return status;
+        } else {
+          alert('Purchase cannot be made since Bank balance is 0');
+        }
+      } else {
+        // Mode of transaction changed
+        if (
+          parseInt(currentBalance) - recordBeforeEdit.amount >=
+          parseInt(newAmt)
+        ) {
+          status.expense = status.expense + parseInt(newAmt);
+          status.income = status.income - recordBeforeEdit.amount;
+          status.balance = status.income - status.expense;
+          return status;
+        } else {
+          alert('Purchase cannot be made since Bank balance is 0');
+        }
       }
-      status.balance = status.income - status.expense;
-      return status;
-    } else alert('Purchase cannot be made since Bank balance is 0');
+    } else {
+      if (currentBalance >= newAmt) {
+        status.expense += parseInt(newAmt);
+        status.balance = status.income - status.expense;
+        return status;
+      } else {
+        alert('Purchase cannot be made since Bank balance is 0');
+      }
+    }
   } else {
+    // Income Transaction
     status.income += parseInt(newAmt);
-    if (record) {
-      if (transactionType == record.transactionType)
-        status.income -= parseInt(record.amount);
-      else status.expense -= parseInt(record.amount);
+    if (recordBeforeEdit) {
+      if (recordBeforeEdit.transactionType == newtransactionType) {
+        // No change in mode of transaction after
+        status.income -= recordBeforeEdit.amount;
+      } else status.expense -= recordBeforeEdit.amount;
     }
     status.balance = status.income - status.expense;
     return status;

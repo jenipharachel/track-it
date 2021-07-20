@@ -80,25 +80,53 @@ export function validateStatus(
   status,
   transactionType,
 ) {
-  if (transactionType == 'Expense') {
-    if (curntBalance >= newAmt) {
-      status.expense += parseInt(newAmt);
-      if (record) {
-        if (transactionType == record.transactionType)
-          status.expense -= parseInt(record.amount);
-        else status.income -= parseInt(record.amount);
+  if (record) {
+    if (record.transactionType == transactionType)
+      if (transactionType == 'Expense') {
+        if (curntBalance + record.amount >= newAmt) {
+          status.expense = status.expense - record.amount + parseInt(newAmt);
+          status.balance = status.income - status.expense;
+          return status;
+        } else {
+          alert('Purchase cannot be made since Bank balance is 0');
+        }
+      } else {
+        status.income = status.income - record.amount + parseInt(newAmt);
+        status.balance = status.income - status.expense;
+        return status;
       }
-      status.balance = status.income - status.expense;
-      return status;
-    } else alert('Purchase cannot be made since Bank balance is 0');
-  } else {
-    status.income += parseInt(newAmt);
-    if (record) {
-      if (transactionType == record.transactionType)
-        status.income -= parseInt(record.amount);
-      else status.expense -= parseInt(record.amount);
+    else {
+      if (transactionType == 'Expense') {
+        if (curntBalance - record.amt - newAmt) {
+          status.expense = status.expense + parseInt(newAmt);
+          status.income = status.income - record.amount;
+          status.balance = status.income - status.expense;
+          return status;
+        } else {
+          alert('Purchase cannot be made since Bank balance is 0');
+        }
+      } else {
+        status.income = status.income + parseInt(newAmt);
+        status.expense = status.expense - record.amount;
+        status.balance = status.income - status.expense;
+
+        return status;
+      }
     }
-    status.balance = status.income - status.expense;
-    return status;
+  } else {
+    if (transactionType == 'Expense') {
+      if (curntBalance >= newAmt) {
+        status.expense += parseInt(newAmt);
+        status.balance = status.income - status.expense;
+        return status;
+      } else {
+        alert('Purchase cannot be made since Bank balance is 0');
+      }
+    } else {
+      status.income += parseInt(newAmt);
+      status.balance = status.income - status.expense;
+
+      return status;
+    }
   }
 }

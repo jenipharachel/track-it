@@ -7,7 +7,7 @@ import {colors, ModalHeader} from '../../theme';
 import {connect} from 'react-redux';
 import {updateBalance, updateTransaction} from '../../redux/actions';
 import moment from 'moment';
-import {addBasedOnDate, updateBasedOnID} from './helpers';
+import {addBasedOnDate, updateBasedOnID, validateStatus} from './helpers';
 
 const AddEditModal = props => {
   const [amount, setAmount] = useState('');
@@ -94,29 +94,14 @@ const AddEditModal = props => {
       ? updateBasedOnID(currentTransaction, date, transactionHistory, recordID)
       : addBasedOnDate(currentTransaction, date, transactionHistory);
 
-    if (transactionType == 'Expense') {
-      if (props.balance >= amount) {
-        if (record) {
-          status.balance = balance + record.amount - parseInt(amount);
-          status.expense = balance - record.amount + parseInt(amount);
-        } else {
-          status.balance -= parseInt(amount);
-          status.expense += parseInt(amount);
-        }
-        updateDataToState(status, updatedTransaction);
-      } else {
-        alert('Purchase cannot be made since Bank balance is 0');
-      }
-    } else {
-      if (record) {
-        status.balance = balance - record.amount + parseInt(amount);
-        status.income = balance - record.amount + parseInt(amount);
-      } else {
-        status.balance += parseInt(amount);
-        status.income += parseInt(amount);
-      }
-      updateDataToState(status, updatedTransaction);
-    }
+    let updatedStatus = validateStatus(
+      balance,
+      amount,
+      record,
+      status,
+      transactionType,
+    );
+    if (updatedStatus) updateDataToState(updatedStatus, updatedTransaction);
   };
 
   const updateDataToState = (status, updatedTransactions) => {

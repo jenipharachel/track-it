@@ -11,7 +11,7 @@ import {TextBtn} from '../../components/Button';
 // import {TextBox} from '../../components';
 import colors from '../../theme/colors';
 import {connect} from 'react-redux';
-import {deleteSelectedRecord, modifyStatus} from './helpers';
+import {deleteSelectedRecord, modifyStatusForDeletion} from './helpers';
 import {
   updateBalance,
   updateTransaction,
@@ -27,7 +27,7 @@ const ViewModal = props => {
   const deleteRecord = (date, recordID) => {
     const {transactionHistory, status} = props;
     let modifiedList = deleteSelectedRecord(recordID, date, transactionHistory);
-    let modifiedStatus = modifyStatus(status, record);
+    let modifiedStatus = modifyStatusForDeletion(status, record);
     if (modifiedStatus) {
       props.updateBalance(modifiedStatus);
       props.updateTransaction(modifiedList);

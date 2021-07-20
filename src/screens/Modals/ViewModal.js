@@ -36,7 +36,7 @@ const ViewModal = props => {
   };
 
   const moveToEditScreen = () => {
-    props.changeModalView('Add');
+    props.changeModalView('Edit');
   };
 
   return (

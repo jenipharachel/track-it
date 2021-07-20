@@ -41,11 +41,12 @@ const AddEditModal = props => {
   };
 
   const DateBox = (value, placeholder) => {
+    let isDisabled = props.modalType == 'Edit' ? true : false;
     return (
       <TouchableOpacity
         style={{flex: 0.08, margin: 15}}
         onPress={showDatepicker}
-        disabled={`${recordID}` ? true : false}>
+        disabled={isDisabled}>
         <TextInput
           style={[styles.input, {flex: 1, margin: 0}]}
           value={`${value}`}
@@ -86,7 +87,7 @@ const AddEditModal = props => {
     const {balance, income, expense, transactionHistory} = props;
     let status = {balance, income, expense};
     let currentTransaction = {amount, desc, transactionType};
-    let isEditTransaction = `${recordID}`;
+    let isEditTransaction = props.modalType == 'Edit';
     let record = isEditTransaction && props.route.params.record;
 
     let updatedTransaction = isEditTransaction
@@ -127,7 +128,7 @@ const AddEditModal = props => {
   return (
     <View style={styles.modalStyle}>
       <ModalHeader
-        title={`Add Income/Expense`}
+        title={`${props.modalType} Income/Expense`}
         closeModal={() => props.navigation.pop()}
       />
       <View style={{flex: 0.93}}>
@@ -176,7 +177,8 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
   const {balance, income, expense} = state.status;
   const {transactionHistory} = state.transactions;
-  return {balance, income, expense, transactionHistory};
+  const {modalType} = state.modal;
+  return {balance, income, expense, transactionHistory, modalType};
 }
 
 const mapDispatchToProps = {updateBalance, updateTransaction};

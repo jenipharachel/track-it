@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-remix-icon';
 import colors from '../../theme/colors';
 
 const ModalHeader = props => {
@@ -10,7 +10,7 @@ const ModalHeader = props => {
         {props.title}
       </Text>
       <TouchableOpacity style={{flex: 0.05}} onPress={props.closeModal}>
-        <Icon name="close" size={20} color={colors.black} />
+        <Icon name="close-fill" size={20} color={colors.black} />
       </TouchableOpacity>
     </View>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import {TouchableOpacity, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-remix-icon';
 import colors from '../../theme/colors';
 
 const AddBtn = props => {
@@ -8,7 +8,7 @@ const AddBtn = props => {
     <TouchableOpacity
       style={styles.button}
       onPress={() => props.onButtonClick()}>
-      <Icon name="plus" size={20} color={colors.white} />
+      <Icon name="add-fill" size={20} color={colors.white} />
     </TouchableOpacity>
   );
 };

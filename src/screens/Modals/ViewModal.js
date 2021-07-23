@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TextInput,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
 import {TextBtn} from '../../components/Button';
 // import {TextBox} from '../../components';
 import colors from '../../theme/colors';

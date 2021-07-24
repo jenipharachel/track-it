@@ -1,0 +1,8 @@
+{
+  "@components": "./src/components",
+  "@navigation": "./src/navigation",
+  "@redux": "./src/redux",
+  "@screens": "./src/screens",
+  "@theme": "./src/theme",
+  "@utils": "./src/utils"
+}

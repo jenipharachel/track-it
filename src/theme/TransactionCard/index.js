@@ -1,25 +1,33 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import colors from '../colors';
+import PropTypes from 'prop-types';
 
-const TransactionCard = props => {
+const TransactionCard = ({ index, label, ViewData, transType, value }) => {
   return (
-    <TouchableOpacity
-      key={props.index}
-      style={styles.card}
-      onPress={() => props.ViewData()}>
+    <TouchableOpacity key={index} style={styles.card} onPress={() => ViewData()}>
       <View style={styles.alignment}>
-        <Text style={{fontSize: 14}}>{props.label}</Text>
+        <Text style={styles.fontSize}>{label}</Text>
         <Text
-          style={{
-            fontSize: 14,
-            color: props.transType == 'Income' ? colors.income : colors.expense,
-          }}>
-          ${props.value}
+          style={[
+            styles.fontSize,
+            {
+              color: transType === 'Income' ? colors.income : colors.expense,
+            },
+          ]}>
+          ${value}
         </Text>
       </View>
     </TouchableOpacity>
   );
+};
+
+TransactionCard.propTypes = {
+  index: PropTypes.number.isRequired,
+  label: PropTypes.string.isRequired,
+  ViewData: PropTypes.func.isRequired,
+  transType: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
 };
 
 const styles = StyleSheet.create({
@@ -37,6 +45,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
+  },
+  textStyle: {
+    fontSize: 14,
   },
 });
 export default TransactionCard;

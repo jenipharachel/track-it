@@ -76,7 +76,7 @@ export function validateStatus(currentBalance, newAmt, recordBeforeEdit, status,
           status.balance = status.income - status.expense;
           return status;
         } else {
-          alert('Purchase cannot be made since Bank balance is 0');
+          alert('Purchase cannot be made due to insufficient funds');
         }
       } else {
         // Mode of transaction changed
@@ -86,7 +86,7 @@ export function validateStatus(currentBalance, newAmt, recordBeforeEdit, status,
           status.balance = status.income - status.expense;
           return status;
         } else {
-          alert('Purchase cannot be made since Bank balance is 0');
+          alert('Purchase cannot be made due to insufficient funds');
         }
       }
     } else {

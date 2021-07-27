@@ -1,21 +1,24 @@
 import React from 'react';
-import { View } from 'react-native';
 import { TrackHistory } from '@components';
 import { Header, BalanceCard } from '@theme';
 import colors from '@theme/colors';
+import styled from 'styled-components/native';
+
+const StyledView = styled.View`
+  display: flex;
+  background-color: ${colors.white};
+  flex-direction: column;
+  height: 100%;
+`;
 
 const LandingPage = (props) => {
   return (
-    <View style={styles.container}>
+    <StyledView>
       <Header />
       <BalanceCard />
       <TrackHistory {...props} />
-    </View>
+    </StyledView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.white },
-});
 
 export default LandingPage;

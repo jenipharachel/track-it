@@ -1,8 +1,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import LandingPage from '../screens/LandingPage';
-import Modals from '../screens/Modals';
+import LandingPage from '@screens/LandingPage';
+import Modals from '@screens/Modals';
+import { screenNames } from '@theme';
 
 const Stack = createStackNavigator();
 
@@ -32,8 +33,8 @@ function AppNavigator() {
           }),
         }}
         mode="modal">
-        <Stack.Screen name="LandingPage" component={LandingPage} />
-        <Stack.Screen name="Modals" component={Modals} options={{ animationEnabled: true }} />
+        <Stack.Screen name={screenNames.LandingPage} component={LandingPage} />
+        <Stack.Screen name={screenNames.Modals} component={Modals} options={{ animationEnabled: true }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

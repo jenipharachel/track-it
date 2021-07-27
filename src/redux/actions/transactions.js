@@ -1,5 +1,4 @@
 import ActionType from './types';
-import store from '../store';
 
 export function getTransaction() {
   return {

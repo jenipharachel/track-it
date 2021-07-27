@@ -1,15 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {View, TouchableOpacity, StyleSheet, TextInput} from 'react-native';
-import {TextBox, SwitchToggle} from '../../components';
-import {TextBtn} from '../../components/Button';
+import React, { useEffect, useState } from 'react';
+import { View, TouchableOpacity, StyleSheet, TextInput, Platform } from 'react-native';
+import { SwitchToggle } from '@components';
+import { TextBtn } from '@components/Button';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {colors, ModalHeader} from '../../theme';
-import {connect} from 'react-redux';
-import {updateBalance, updateTransaction} from '../../redux/actions';
+import { colors, ModalHeader } from '@theme';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateBalance, updateTransaction } from '@redux/actions';
 import moment from 'moment';
-import {addBasedOnDate, updateBasedOnID, validateStatus} from './helpers';
+import { addBasedOnDate, updateBasedOnID, validateStatus } from './helpers';
+import PropTypes from 'prop-types';
 
-const AddEditModal = props => {
+const AddEditModal = ({ navigation, route }) => {
   const [amount, setAmount] = useState('');
   const [desc, setDesc] = useState('');
   const [date, setDate] = useState('');
@@ -18,10 +19,16 @@ const AddEditModal = props => {
   const [recordID, setRecordID] = useState('');
   const [transactionType, setTransactionType] = useState('Income');
   const dateTime = new Date();
+  const balance = useSelector((state) => state.status.balance);
+  const income = useSelector((state) => state.status.income);
+  const expense = useSelector((state) => state.status.expense);
+  const transactionHistory = useSelector((state) => state.transactions.transactionHistory);
+  const modalType = useSelector((state) => state.modal.modalType);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (props.route.params) {
-      const {record, date, recordID} = props.route.params;
+    if (route.params) {
+      const { record, date, recordID } = route.params;
       setDate(date);
       setAmount(record.amount);
       setDesc(record.desc);
@@ -30,42 +37,26 @@ const AddEditModal = props => {
   }, []);
 
   const TextBox = (func, value, placeholder) => {
-    return (
-      <TextInput
-        style={styles.input}
-        onChangeText={func}
-        value={value}
-        placeholder={placeholder}
-      />
-    );
+    return <TextInput style={styles.input} onChangeText={func} value={value} placeholder={placeholder} />;
   };
 
   const DateBox = (value, placeholder) => {
-    let isDisabled = props.modalType == 'Edit' ? true : false;
+    let isDisabled = modalType === 'Edit' ? true : false;
     return (
-      <TouchableOpacity
-        style={{flex: 0.08, margin: 15}}
-        onPress={showDatepicker}
-        disabled={isDisabled}>
-        <TextInput
-          style={[styles.input, {flex: 1, margin: 0}]}
-          value={`${value}`}
-          placeholder={placeholder}
-          editable={false}
-        />
+      <TouchableOpacity style={styles.dateBox} onPress={showDatepicker} disabled={isDisabled}>
+        <TextInput style={[styles.input, styles.fullArea]} value={`${value}`} placeholder={placeholder} editable={false} />
       </TouchableOpacity>
     );
   };
 
   const onChange = (event, selectedDateTime) => {
-    let selectedDate =
-      selectedDateTime && moment(new Date(selectedDateTime)).format('LL');
+    let selectedDate = selectedDateTime && moment(new Date(selectedDateTime)).format('LL');
     let formattedDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(formattedDate);
   };
 
-  const showMode = currentMode => {
+  const showMode = (currentMode) => {
     setShow(true);
     setMode(currentMode);
   };
@@ -84,66 +75,55 @@ const AddEditModal = props => {
   };
 
   const validateWithBankBalance = () => {
-    const {balance, income, expense, transactionHistory} = props;
-    let status = {balance, income, expense};
-    let currentTransaction = {amount, desc, transactionType};
-    let isEditTransaction = props.modalType == 'Edit';
-    let record = isEditTransaction && props.route.params.record;
+    let status = { balance, income, expense };
+    let currentTransaction = { amount, desc, transactionType };
+    let isEditTransaction = modalType === 'Edit';
+    let record = isEditTransaction && route.params.record;
 
-    let updatedStatus = validateStatus(
-      balance,
-      amount,
-      record,
-      status,
-      transactionType,
-    );
+    let updatedStatus = validateStatus(balance, amount, record, status, transactionType);
     if (updatedStatus) {
       let updatedTransaction = isEditTransaction
-        ? updateBasedOnID(
-            currentTransaction,
-            date,
-            transactionHistory,
-            recordID,
-          )
+        ? updateBasedOnID(currentTransaction, date, transactionHistory, recordID)
         : addBasedOnDate(currentTransaction, date, transactionHistory);
       updateDataToState(updatedStatus, updatedTransaction);
     }
   };
 
   const updateDataToState = (status, updatedTransactions) => {
-    props.updateBalance(status);
-    props.updateTransaction(updatedTransactions);
-    props.navigation.pop();
+    dispatch(updateBalance(status));
+    dispatch(updateTransaction(updatedTransactions));
+    navigation.pop();
   };
 
   return (
     <View style={styles.modalStyle}>
-      <ModalHeader
-        title={`${props.modalType} Income/Expense`}
-        closeModal={() => props.navigation.pop()}
-      />
-      <View style={{flex: 0.93}}>
-        <SwitchToggle
-          transType={transactionType}
-          setTransType={setTransactionType}
-        />
+      <ModalHeader title={`${modalType} Income/Expense`} closeModal={() => navigation.pop()} />
+      <View style={styles.modalContainer}>
+        <SwitchToggle transType={transactionType} setTransType={setTransactionType} />
         {TextBox(setAmount, amount, 'Amount')}
         {TextBox(setDesc, desc, 'Description')}
         {DateBox(date, 'Date')}
-        <TextBtn label={'Save'} onPress={saveData} />
-        {show && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={dateTime}
-            mode={mode}
-            is24Hour={true}
-            display="default"
-            onChange={onChange}
-          />
-        )}
+        <TextBtn label="Save" onPress={saveData} />
+        {show && <DateTimePicker testID="dateTimePicker" value={dateTime} mode={mode} is24Hour={true} display="default" onChange={onChange} />}
       </View>
     </View>
   );
+};
+
+AddEditModal.propTypes = {
+  navigation: PropTypes.shape({
+    pop: PropTypes.func.isRequired,
+  }).isRequired,
+  route: PropTypes.shape({
+    params: PropTypes.shape({
+      record: PropTypes.shape({
+        amount: PropTypes.string.isRequired,
+        desc: PropTypes.string.isRequired,
+      }).isRequired,
+      date: PropTypes.string.isRequired,
+      recordID: PropTypes.number.isRequired,
+    }),
+  }),
 };
 
 const styles = StyleSheet.create({
@@ -163,15 +143,9 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     color: colors.lightblack,
   },
+  modalContainer: { flex: 0.93 },
+  dateBox: { flex: 0.08, margin: 15 },
+  fullArea: { flex: 1, margin: 0 },
 });
 
-function mapStateToProps(state) {
-  const {balance, income, expense} = state.status;
-  const {transactionHistory} = state.transactions;
-  const {modalType} = state.modal;
-  return {balance, income, expense, transactionHistory, modalType};
-}
-
-const mapDispatchToProps = {updateBalance, updateTransaction};
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddEditModal);
+export default AddEditModal;

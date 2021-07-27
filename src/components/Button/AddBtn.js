@@ -1,13 +1,12 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet} from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 import Icon from 'react-native-remix-icon';
-import colors from '../../theme/colors';
+import colors from '@theme/colors';
 
-const AddBtn = props => {
+const AddBtn = ({ onButtonClick }) => {
   return (
-    <TouchableOpacity
-      style={styles.button}
-      onPress={() => props.onButtonClick()}>
+    <TouchableOpacity style={styles.button} onPress={() => onButtonClick()}>
       <Icon name="add-fill" size={20} color={colors.white} />
     </TouchableOpacity>
   );
@@ -23,5 +22,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+AddBtn.propTypes = {
+  onButtonClick: PropTypes.func.isRequired,
+};
 
 export default AddBtn;

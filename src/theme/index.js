@@ -4,4 +4,4 @@ import TransactionCard from './TransactionCard';
 import ModalHeader from './ModalHeader';
 import colors from './colors';
 
-export {BalanceCard, Header, TransactionCard, ModalHeader, colors};
+export { BalanceCard, Header, TransactionCard, ModalHeader, colors };

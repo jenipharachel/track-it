@@ -1,38 +1,39 @@
+/* eslint-disable react-native/no-raw-text */
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import colors from '../colors';
 import PropTypes from 'prop-types';
-// import styled from 'styled-components/native';
+import styled from 'styled-components/native';
 
-// const StyledView = styled.View`
-//   background-color: papayawhip;
-// `;
+const StyledText = styled.Text`
+  color: ${(props) => props.color};
+  font-size: ${(props) => (props.balance ? 24 : 20)};
+`;
 
-// const StyledText = styled.Text`
-//   fontColor: ${(props) => props.color};
-//   fontSize: ${(props) => (props.balance ? 24 : 20)};
-// `;
+const PlainText = styled.Text`
+  color: ${colors.black}
+  font-size: 12px;
+`;
 
 const BalanceCard = ({ balance, income, expense }) => {
   return (
     <View style={styles.balanceBox}>
       <View style={styles.section}>
-        <Text style={styles.subtext}>Balance</Text>
-        {/* <StyledText color={colors.balance} balance>
+        <PlainText>Balance</PlainText>
+        <StyledText color={colors.balance} balance>
           ${balance}
-        </StyledText> */}
-        <Text style={styles.balanceText}>${balance}</Text>
+        </StyledText>
       </View>
       <View style={styles.separator} />
       <View style={styles.halfFlex}>
         <View style={styles.section}>
-          <Text style={styles.subtext}>Income</Text>
-          <Text style={styles.incomeText}>${income}</Text>
+          <PlainText>Income</PlainText>
+          <StyledText color={colors.income}>${income}</StyledText>
         </View>
         <View style={styles.section}>
-          <Text style={styles.expenseText}>${expense}</Text>
-          <Text style={styles.subtext}>Expense</Text>
+          <StyledText color={colors.expense}>${expense}</StyledText>
+          <PlainText>Expense</PlainText>
         </View>
       </View>
     </View>
@@ -61,12 +62,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.grey,
     marginVertical: 10,
   },
-  subtext: {
-    fontSize: 12,
-  },
-  balanceText: { color: colors.balance, fontSize: 24 },
-  incomeText: { color: colors.income, fontSize: 20 },
-  expenseText: { color: colors.expense, fontSize: 20 },
 });
 
 function mapStateToProps(state) {

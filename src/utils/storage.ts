@@ -1,7 +1,7 @@
-import {Storage} from 'redux-persist';
-import {MMKV} from 'react-native-mmkv';
+import { Storage } from 'redux-persist';
+import { MMKV } from 'react-native-mmkv';
 
-export const storage: Storage = {
+const storage: Storage = {
   setItem: (key: string, value: string): Promise<boolean> => {
     MMKV.set(key, value);
     return Promise.resolve(true);
@@ -15,3 +15,5 @@ export const storage: Storage = {
     return Promise.resolve();
   },
 };
+
+export default storage;

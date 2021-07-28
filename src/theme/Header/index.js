@@ -1,11 +1,11 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import colors from '../colors';
 
-const Header = props => {
+const Header = () => {
   return (
     <View style={styles.header}>
-      <Text style={{color: colors.white}}>TrackIt</Text>
+      <Text style={{ color: colors.white }}>TrackIt</Text>
     </View>
   );
 };

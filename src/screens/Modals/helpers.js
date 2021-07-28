@@ -6,11 +6,10 @@ export function addBasedOnDate(incomingTransaction, date, transactions) {
     trans: [incomingTransaction],
   };
   if (transactions) {
-    let isDateExist = transactions.some(el => el.date == date);
+    let isDateExist = transactions.some((el) => el.date === date);
     if (isDateExist)
-      transactions.forEach(dayTransactions => {
-        if (dayTransactions.date == date)
-          dayTransactions.trans.unshift(incomingTransaction);
+      transactions.forEach((dayTransactions) => {
+        if (dayTransactions.date === date) dayTransactions.trans.unshift(incomingTransaction);
       });
     else transactions.push(dayTransactions);
     return sortTransactionsByDate(transactions);
@@ -21,21 +20,16 @@ export function addBasedOnDate(incomingTransaction, date, transactions) {
   }
 }
 
-const sortTransactionsByDate = transactionsList => {
+const sortTransactionsByDate = (transactionsList) => {
   let sortedList = _.sortBy(transactionsList, function (dayTransactions) {
     return new Date(dayTransactions.date);
   }).reverse();
   return sortedList;
 };
 
-export function updateBasedOnID(
-  currentTransaction,
-  date,
-  transactions,
-  recordID,
-) {
-  transactions.forEach(dayTransactions => {
-    if (dayTransactions.date == date) {
+export function updateBasedOnID(currentTransaction, date, transactions, recordID) {
+  transactions.forEach((dayTransactions) => {
+    if (dayTransactions.date === date) {
       dayTransactions.trans[recordID] = currentTransaction;
       return dayTransactions;
     }
@@ -44,11 +38,9 @@ export function updateBasedOnID(
 }
 
 export function deleteSelectedRecord(recordID, date, transactions) {
-  let modifiedTransList = transactions.filter((dayTransactions, dayID) => {
-    if (dayTransactions.date == date) {
-      let modifiedTransactions = dayTransactions.trans.filter(
-        (record, transID) => transID !== recordID,
-      );
+  let modifiedTransList = transactions.filter((dayTransactions) => {
+    if (dayTransactions.date === date) {
+      let modifiedTransactions = dayTransactions.trans.filter((record, transID) => transID !== recordID);
       dayTransactions.trans = modifiedTransactions;
       return dayTransactions.trans.length > 0;
     }
@@ -57,7 +49,7 @@ export function deleteSelectedRecord(recordID, date, transactions) {
 }
 
 export function modifyStatusForDeletion(status, record) {
-  if (record.transactionType == 'Expense') {
+  if (record.transactionType === 'Expense') {
     status.balance += parseInt(record.amount);
     status.expense -= parseInt(record.amount);
     return status;
@@ -73,38 +65,28 @@ export function modifyStatusForDeletion(status, record) {
   }
 }
 
-export function validateStatus(
-  currentBalance,
-  newAmt,
-  recordBeforeEdit,
-  status,
-  newtransactionType,
-) {
-  if (newtransactionType == 'Expense') {
+export function validateStatus(currentBalance, newAmt, recordBeforeEdit, status, newtransactionType) {
+  if (newtransactionType === 'Expense') {
     // Expense Transaction
     if (recordBeforeEdit) {
-      if (recordBeforeEdit.transactionType == newtransactionType) {
+      if (recordBeforeEdit.transactionType === newtransactionType) {
         // No change in mode of transaction
         if (currentBalance + recordBeforeEdit.amount >= newAmt) {
-          status.expense =
-            status.expense - recordBeforeEdit.amount + parseInt(newAmt);
+          status.expense = status.expense - recordBeforeEdit.amount + parseInt(newAmt);
           status.balance = status.income - status.expense;
           return status;
         } else {
-          alert('Purchase cannot be made since Bank balance is 0');
+          alert('Purchase cannot be made due to insufficient funds');
         }
       } else {
         // Mode of transaction changed
-        if (
-          parseInt(currentBalance) - recordBeforeEdit.amount >=
-          parseInt(newAmt)
-        ) {
+        if (parseInt(currentBalance) - recordBeforeEdit.amount >= parseInt(newAmt)) {
           status.expense = status.expense + parseInt(newAmt);
           status.income = status.income - recordBeforeEdit.amount;
           status.balance = status.income - status.expense;
           return status;
         } else {
-          alert('Purchase cannot be made since Bank balance is 0');
+          alert('Purchase cannot be made due to insufficient funds');
         }
       }
     } else {
@@ -120,7 +102,7 @@ export function validateStatus(
     // Income Transaction
     status.income += parseInt(newAmt);
     if (recordBeforeEdit) {
-      if (recordBeforeEdit.transactionType == newtransactionType) {
+      if (recordBeforeEdit.transactionType === newtransactionType) {
         // No change in mode of transaction after
         status.income -= recordBeforeEdit.amount;
       } else status.expense -= recordBeforeEdit.amount;

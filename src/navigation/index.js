@@ -1,8 +1,9 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import LandingPage from '../screens/LandingPage';
-import Modals from '../screens/Modals';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import LandingPage from '@screens/LandingPage';
+import Modals from '@screens/Modals';
+import { screenNames } from '@theme';
 
 const Stack = createStackNavigator();
 
@@ -13,9 +14,9 @@ function AppNavigator() {
         headerMode="none"
         screenOptions={{
           headerShown: false,
-          cardStyle: {backgroundColor: 'transparent'},
+          cardStyle: { backgroundColor: 'transparent' },
           cardOverlayEnabled: true,
-          cardStyleInterpolator: ({current: {progress}}) => ({
+          cardStyleInterpolator: ({ current: { progress } }) => ({
             cardStyle: {
               opacity: progress.interpolate({
                 inputRange: [0, 0.5, 0.9, 1],
@@ -32,12 +33,8 @@ function AppNavigator() {
           }),
         }}
         mode="modal">
-        <Stack.Screen name="LandingPage" component={LandingPage} />
-        <Stack.Screen
-          name="Modals"
-          component={Modals}
-          options={{animationEnabled: true}}
-        />
+        <Stack.Screen name={screenNames.LandingPage} component={LandingPage} />
+        <Stack.Screen name={screenNames.Modals} component={Modals} options={{ animationEnabled: true }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

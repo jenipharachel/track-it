@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 import status from './status';
 import transactions from './transactions';
 import modal from './modal';

@@ -1,8 +1,8 @@
-import {createStore} from 'redux';
-import {persistStore, persistReducer} from 'redux-persist';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createStore } from 'redux';
+import { persistStore, persistReducer } from 'redux-persist';
 import reducers from './reducers';
-import {storage} from '../utils/storage';
+// eslint-disable-next-line import/no-unresolved
+import storage from '@utils/storage';
 
 const persistConfig = {
   key: 'root',

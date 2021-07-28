@@ -1,16 +1,23 @@
 import React from 'react';
-import {View} from 'react-native';
-import {TrackHistory} from '../../components';
-import {Header, BalanceCard} from '../../theme';
-import colors from '../../theme/colors';
+import { TrackHistory } from '@components';
+import { Header, BalanceCard } from '@theme';
+import colors from '@theme/colors';
+import styled from 'styled-components/native';
 
-const LandingPage = props => {
+const StyledView = styled.View`
+  display: flex;
+  background-color: ${colors.white};
+  flex-direction: column;
+  height: 100%;
+`;
+
+const LandingPage = (props) => {
   return (
-    <View style={{flex: 1, backgroundColor: colors.white}}>
+    <StyledView>
       <Header />
       <BalanceCard />
       <TrackHistory {...props} />
-    </View>
+    </StyledView>
   );
 };
 

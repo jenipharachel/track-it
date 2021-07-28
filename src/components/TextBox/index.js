@@ -1,14 +1,9 @@
 import React from 'react';
-import {View, StyleSheet, TextInput} from 'react-native';
+import { StyleSheet, TextInput } from 'react-native';
+import PropTypes from 'prop-types';
 
-const TextBox = props => {
-  return (
-    <TextInput
-      style={styles.input}
-      onChangeText={props.func}
-      value={props.value}
-    />
-  );
+const TextBox = ({ value, func }) => {
+  return <TextInput style={styles.input} onChangeText={func} value={value} />;
 };
 
 const styles = StyleSheet.create({
@@ -18,5 +13,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 });
+
+TextBox.propTypes = {
+  value: PropTypes.string.isRequired,
+  func: PropTypes.func.isRequired,
+};
 
 export default TextBox;
